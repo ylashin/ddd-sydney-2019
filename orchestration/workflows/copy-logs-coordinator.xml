@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<coordinator-app xmlns="uri:oozie:coordinator:0.5" end="2019-09-20T12:00Z" frequency="${coord:days(1)}" name="copy_files_coordinator" start="2019-09-01T12:00Z" timezone="UTC">
+    <controls>
+        <concurrency>5</concurrency>
+    </controls>
+    <datasets>
+        <dataset frequency="${coord:days(1)}" initial-instance="2019-01-01T00:00Z" name="log_dataset" timezone="UTC">
+            <uri-template>/data/data_in/date=${YEAR}-${MONTH}-${DAY}</uri-template>
+        </dataset>
+    </datasets>
+    <input-events>
+        <data-in dataset="log_dataset" name="log_available">
+            <instance>${coord:current(0)}</instance>
+        </data-in>
+    </input-events>
+    <action>
+        <workflow>
+            <app-path>/data/workflows/copy-file.xml</app-path>
+            <configuration>
+                <property>
+                    <name>date</name>
+                    <value>${coord:formatTime(coord:nominalTime(), 'yyyy-MM-dd')}</value>
+                </property>
+            </configuration>
+        </workflow>
+    </action>
+</coordinator-app>

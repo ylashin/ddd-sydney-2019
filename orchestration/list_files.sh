@@ -1,0 +1,1 @@
+hdfs dfs -du -h /
